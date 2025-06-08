@@ -23,6 +23,23 @@ enum { white, black };
 #define set_bit(bitboard, square) (bitboard |= (1ULL << square));
 #define pop_bit(bitboard, square) (get_bit(bitboard, e4) ? bitboard ^= (1ULL << e4) : 0);
 
+// count bits within a bitboard 
+static inline int count_bits(U64 bitboard) {
+  // bit counter
+  int count = 0;
+  
+  // consecutively reset least significant 1st big
+  while (bitboard) {
+    // increament count
+    count++;
+
+    // reset least significant 1st bit
+    bitboard &= bitboard - 1;
+  }
+
+  return count;
+}
+
 // print bitboard 
 void print_bitboard(U64 bitboard) {
   printf("\n");
@@ -270,9 +287,7 @@ int main() {
   set_bit(block, g4);
   print_bitboard(block);
 
-  U64 bitboard = rook_attacks_on_the_fly(d4, block);
-  print_bitboard(bitboard);
-  
+  printf("bit count: %d\n", count_bits(block));
   // init leaper pieces attacks
   // init_leapers_attacks(); 
 
