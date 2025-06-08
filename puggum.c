@@ -51,12 +51,15 @@ void print_bitboard(U64 bitboard) {
 const U64 NOT_A_FILE = 0xfefefefefefefefeULL;
 const U64 NOT_AB_FILE = 0xfcfcfcfcfcfcfcfcULL;
 const U64 NOT_H_FILE = 0x7f7f7f7f7f7f7f7fULL;
-const U64 NOT_HG_FILE = 0x3f3f3f3f3f3f3f3fULL;
+const U64 NOT_GH_FILE = 0x3f3f3f3f3f3f3f3fULL;
 const U64 NOT_1_RANK = 0xffffffffffffffULL;
 const U64 NOT_8_RANK = 0xffffffffffffff00ULL;
 
 // pawn attack table [side][square]
 U64 pawn_attacks[2][64];
+
+// knight attack table [square]
+U64 knight_attack[64];
 
 // generate pawn attacks
 U64 mask_pawn_attacks(int side, int square) {
@@ -80,6 +83,31 @@ U64 mask_pawn_attacks(int side, int square) {
   return attacks;
 }
 
+// generate knight attacks
+U64 mask_knight_attacks(int square) {
+  // result attacks bitboard
+  U64 attacks = 0ULL;
+
+  // piece bitboard
+  U64 bitboard = 0ULL;
+
+  // set piece on bitboard
+  set_bit(bitboard, square);
+
+  // generate knight attacks, shift 6, 10, 15, 17
+  attacks |= (bitboard >> 6ULL) & NOT_AB_FILE;
+  attacks |= (bitboard << 10ULL) & NOT_AB_FILE;
+  attacks |= (bitboard >> 15ULL) & NOT_A_FILE;
+  attacks |= (bitboard << 17ULL) & NOT_A_FILE;
+
+  attacks |= (bitboard << 6ULL) & NOT_GH_FILE;
+  attacks |= (bitboard >> 10ULL) & NOT_GH_FILE;
+  attacks |= (bitboard << 15ULL) & NOT_H_FILE;
+  attacks |= (bitboard >> 17ULL) & NOT_H_FILE;
+
+  return attacks;
+}
+
 // init leaper pieces attacks
 void init_leapers_attacks() {
   // loop over 64 board squares
@@ -87,12 +115,13 @@ void init_leapers_attacks() {
     // init pawn attacks
     pawn_attacks[white][square] = mask_pawn_attacks(white, square);
     pawn_attacks[black][square] = mask_pawn_attacks(black, square);
+    knight_attack[square] = mask_knight_attacks(square);
   }
 }
 
 
 int main() {
-  // U64 bitboard = mask_pawn_attacks(black, d7);
+  U64 bitboard = mask_knight_attacks(e4); 
   // print_bitboard(bitboard);
   
   // init leaper pieces attacks
@@ -100,17 +129,7 @@ int main() {
 
   // loop over 64 board squares
   for (int square = 0; square < 64; ++square) {
-    print_bitboard(pawn_attacks[black][square]);
+    print_bitboard(knight_attack[square]);
   }
-  // U64 bitboard = 0ULL;
-  // for (int rank = 0; rank < 8; ++rank) {
-  //   for (int file = 0; file < 8; ++file) {
-  //     int square = rank * 8 + file;
-  //     if (file != 7 && file != 6) {
-  //       set_bit(bitboard, square);
-  //     }
-  //   }
-  // }
-  // print_bitboard(bitboard);
   return 0;
 }
