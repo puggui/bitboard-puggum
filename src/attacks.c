@@ -1,84 +1,8 @@
-#include <stdio.h>
+#include "attacks.h"
+#include "util.h"
 
-// define bitboard data type
-#define U64 unsigned long long
-
-// enum board squares
-enum {
-  a8, b8, c8, d8, e8, f8, g8, h8,
-  a7, b7, c7, d7, e7, f7, g7, h7,
-  a6, b6, c6, d6, e6, f6, g6, h6,
-  a5, b5, c5, d5, e5, f5, g5, h5,
-  a4, b4, c4, d4, e4, f4, g4, h4,
-  a3, b3, c3, d3, e3, f3, g3, h3,
-  a2, b2, c2, d2, e2, f2, g2, h2,
-  a1, b1, c1, d1, e1, f1, g1, h1
-};
-
-// side to move (colors)
-enum { white, black };
-
-// set/get/pop macros
-#define get_bit(bitboard, square) (bitboard & (1ULL << square))
-#define set_bit(bitboard, square) (bitboard |= (1ULL << square));
-#define pop_bit(bitboard, square) (get_bit(bitboard, e4) ? bitboard ^= (1ULL << e4) : 0);
-
-// count bits within a bitboard 
-static inline int count_bits(U64 bitboard) {
-  // bit counter
-  int count = 0;
-  
-  // consecutively reset least significant 1st big
-  while (bitboard) {
-    // increament count
-    count++;
-
-    // reset least significant 1st bit
-    bitboard &= bitboard - 1;
-  }
-
-  return count;
-}
-
-// print bitboard 
-void print_bitboard(U64 bitboard) {
-  printf("\n");
-  // loop over board rank
-  for (int rank = 0; rank < 8; ++rank) {
-    for (int file = 0; file < 8; ++file) {
-      int square = rank * 8 + file;
-
-      // print ranks
-      if (!file) printf("%d ", 8 - rank);
-
-      // get bit state (1 or 0)
-      printf(" %d", get_bit(bitboard, square) ? 1 : 0);
-    }
-    printf("\n");
-  }
-  // print board files
-  printf("\n   a b c d e f g h\n\n");
-  
-  // print bitboard as unsigned decimal number
-  printf("   Bitboard: 0x%llx\n\n", bitboard);
-}
-
-// ********* Attacks **********
-// constant for NOT_A_FILE
-const U64 NOT_A_FILE = 0xfefefefefefefefeULL;
-const U64 NOT_AB_FILE = 0xfcfcfcfcfcfcfcfcULL;
-const U64 NOT_H_FILE = 0x7f7f7f7f7f7f7f7fULL;
-const U64 NOT_GH_FILE = 0x3f3f3f3f3f3f3f3fULL;
-const U64 NOT_1_RANK = 0xffffffffffffffULL;
-const U64 NOT_8_RANK = 0xffffffffffffff00ULL;
-
-// pawn attack table [side][square]
 U64 pawn_attacks[2][64];
-
-// knight attack table [square]
 U64 knight_attack[64];
-
-// king attack table [square]
 U64 king_attack[64];
 
 // generate pawn attacks
@@ -90,7 +14,7 @@ U64 mask_pawn_attacks(int side, int square) {
   U64 bitboard = 0ULL;
 
   // set piece on board
-  set_bit(bitboard, square);
+  set_bit(&bitboard, square);
 
   // white pawn
   if (!side) {
@@ -112,7 +36,7 @@ U64 mask_knight_attacks(int square) {
   U64 bitboard = 0ULL;
 
   // set piece on bitboard
-  set_bit(bitboard, square);
+  set_bit(&bitboard, square);
 
   // generate knight attacks, shift 6, 10, 15, 17
   attacks |= (bitboard >> 6ULL) & NOT_AB_FILE;
@@ -137,7 +61,7 @@ U64 mask_king_attacks(int square) {
   U64 bitboard = 0ULL;
 
   // set piece on bitboard
-  set_bit(bitboard, square);
+  set_bit(&bitboard, square);
 
   // generate king attack, shift 1, 7, 8, 9
   attacks |= (bitboard >> 1ULL) & NOT_H_FILE;
@@ -275,21 +199,4 @@ void init_leapers_attacks() {
     // init king attacks
     king_attack[square] = mask_king_attacks(square);
   }
-}
-
-
-int main() {
-  // init occupancy bitboard
-  U64 block = 0ULL;
-  set_bit(block, d7);
-  set_bit(block, d1);
-  set_bit(block, b4);
-  set_bit(block, g4);
-  print_bitboard(block);
-
-  printf("bit count: %d\n", count_bits(block));
-  // init leaper pieces attacks
-  // init_leapers_attacks(); 
-
-  return 0;
 }

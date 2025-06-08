@@ -1,2 +1,2 @@
 all:
-	gcc puggum.c -o puggum
+	gcc test/main.c src/*.c -o puggum
