@@ -169,7 +169,7 @@ U64 mask_rook_attack(int square) {
   int tr = square / 8;
   int tf = square % 8;
 
-  // mask relavent bishop occupancy bits
+  // mask relavent rook occupancy bits
   for (r = tr + 1; r < 7; ++r) attacks |= (1ULL << (r * 8 + tf));
   for (r = tr - 1; r > 0; --r) attacks |= (1ULL << (r * 8 + tf));
   for (f = tf + 1; f < 7; ++f) attacks |= (1ULL << (tr * 8 + f));
@@ -177,6 +177,73 @@ U64 mask_rook_attack(int square) {
   
   return attacks;
 }
+
+// generate bishop attacks on the fly
+U64 bishop_attacks_on_the_fly(int square, U64 block) {
+  // result attacks bitboard
+  U64 attacks = 0ULL;
+
+  // init ranks & files
+  int r, f;
+
+  // init target ranks & files
+  int tr = square / 8;
+  int tf = square % 8;
+
+  // generate bishop attacks
+  for (r = tr + 1, f = tf + 1; r <= 7 && f <= 7; ++r, ++f) {
+    attacks |= (1ULL << (r * 8 + f));
+    if ((1ULL << (r * 8 + f)) & block) break;
+  }
+  for (r = tr - 1, f = tf + 1; r >= 0 && f <= 7; --r, ++f) {
+    attacks |= (1ULL << (r * 8 + f));
+    if ((1ULL << (r * 8 + f)) & block) break;
+  }
+  for (r = tr + 1, f = tf - 1; r <= 7 && f >= 0; ++r, --f) {
+    attacks |= (1ULL << (r * 8 + f));
+    if ((1ULL << (r * 8 + f)) & block) break;
+  }
+  for (r = tr - 1, f = tf - 1; r >= 0 && f >= 0; --r, --f) {
+    attacks |= (1ULL << (r * 8 + f));
+    if ((1ULL << (r * 8 + f)) & block) break;
+  }
+
+  return attacks;
+}
+
+// generate rook attacks on the fly
+U64 rook_attacks_on_the_fly(int square, U64 block) {
+  // return attack bitboard
+  U64 attacks = 0ULL;
+
+  // init ranks & files
+  int r, f;
+
+  // init target rank & files
+  int tr = square / 8;
+  int tf = square % 8;
+
+  // generate rook attacks
+  for (r = tr + 1; r <= 7; ++r) {
+    attacks |= (1ULL << (r * 8 + tf));
+    if ((1ULL << (r * 8 + tf)) & block) break;
+  }
+  for (r = tr - 1; r >= 0; --r) {
+    attacks |= (1ULL << (r * 8 + tf));
+    if ((1ULL << (r * 8 + tf)) & block) break;
+  }
+  for (f = tf + 1; f <= 7; ++f) {
+    attacks |= (1ULL << (tr * 8 + f));
+    if ((1ULL << (tr * 8 + f)) & block) break;
+  }
+  for (f = tf - 1; f >= 0; --f) {
+    attacks |= (1ULL << (tr * 8 + f));
+    if ((1ULL << (tr * 8 + f)) & block) break;
+  }
+  
+  return attacks;
+}
+
 // init leaper pieces attacks
 void init_leapers_attacks() {
   // loop over 64 board squares
@@ -195,15 +262,19 @@ void init_leapers_attacks() {
 
 
 int main() {
-  // U64 bitboard = mask_rook_attack(d4);
-  // print_bitboard(bitboard);
+  // init occupancy bitboard
+  U64 block = 0ULL;
+  set_bit(block, d7);
+  set_bit(block, d1);
+  set_bit(block, b4);
+  set_bit(block, g4);
+  print_bitboard(block);
+
+  U64 bitboard = rook_attacks_on_the_fly(d4, block);
+  print_bitboard(bitboard);
   
   // init leaper pieces attacks
   // init_leapers_attacks(); 
 
-  // loop over 64 board squares
-  for (int square = 0; square < 64; ++square) {
-    print_bitboard(mask_rook_attack(square));
-  }
   return 0;
 }
