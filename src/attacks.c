@@ -200,3 +200,25 @@ void init_leapers_attacks() {
     king_attack[square] = mask_king_attacks(square);
   }
 }
+
+U64 set_occupancy(int index, int bits_in_mask, U64 attack_mask) {
+  // occupancy map
+  U64 occupancy = 0ULL;
+
+  // loop over the range of bits within attack mask
+  for (int count = 0; count < bits_in_mask; ++count) {
+    // get LS1B index of attack mask
+    int square = get_ls1b_index(attack_mask);
+
+    // pop LS1B in attack map
+    pop_bit(&attack_mask, square);
+
+    // make sure occupancy is on board
+    if (index & (1 << count)) {
+      // populate occupancy map 
+      occupancy |= (1ULL << square);
+    }
+  }
+
+  return occupancy;
+}

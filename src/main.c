@@ -4,21 +4,20 @@
 #include "attacks.h"
 
 int main() {
-  // init occupancy bitboard
-  U64 block = 0ULL;
-  set_bit(&block, d7);
-  set_bit(&block, d1);
-  set_bit(&block, b4);
-  set_bit(&block, g4);
-  print_bitboard(block);
-
   // init leaper pieces attacks
   init_leapers_attacks(); 
-  
-  // test print LS1B
-  int index =  get_ls1b_index(block);
-  printf("index: %d\n", index);
-  printf("coordinate: %s\n", square_to_coordinates[index]);
+
+  // mask peice attacks at given square
+  U64 attack_mask = mask_rook_attack(a1);
+  // U64 attack_mask = mask_bishop_attacks(d4);
+
+  // loop over occupancy indicies 
+  // 4096 is from 2^12 number of all possible variations of occupancy mask for rook at a1
+  for (int index = 0; index < 4096; ++index) {
+    // init occupancy
+    print_bitboard(set_occupancy(index, count_bits(attack_mask), attack_mask));
+    getchar();
+  }
 
   return 0;
 }

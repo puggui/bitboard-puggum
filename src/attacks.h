@@ -25,4 +25,6 @@ U64 rook_attacks_on_the_fly(int square, U64 block);
 
 void init_leapers_attacks();
 
+U64 set_occupancy(int index, int bits_in_mask, U64 attack_mask);
+
 #endif
