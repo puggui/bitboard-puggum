@@ -64,3 +64,20 @@ void set_bit(U64* bitboard, int square) {
 void pop_bit(U64* bitboard, int square) {
   get_bit(*bitboard, square) ? *bitboard ^= (1ULL << square) : 0;
 }
+
+uint32_t state = 1804289383;
+
+uint32_t get_random_number() {
+  // get current state
+  unsigned int number = state;
+
+  // XOR shift algorithm
+  number ^= number << 13;
+  number ^= number >> 17;
+  number ^= number << 5;
+
+  // update random number state
+  state = number;
+
+  return number;
+}

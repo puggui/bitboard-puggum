@@ -1,6 +1,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#include <stdint.h>
 #include "const.h"
 
 int count_bits(U64 bitboard);
@@ -13,5 +14,11 @@ void print_bitboard(U64 bitboard);
 U64 get_bit(U64 bitboard, int square);
 void set_bit(U64* bitboard, int square);
 void pop_bit(U64* bitboard, int square);
+
+// psuedo random number
+extern uint32_t state;
+
+// pseudo random number state
+uint32_t get_random_number();
 
 #endif
