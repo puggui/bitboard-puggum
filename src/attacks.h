@@ -19,7 +19,7 @@ U64 mask_king_attacks(int square);
 
 // generate sliding piece attack
 U64 mask_bishop_attacks(int square);
-U64 mask_rook_attack(int square);
+U64 mask_rook_attacks(int square);
 U64 bishop_attacks_on_the_fly(int square, U64 block);
 U64 rook_attacks_on_the_fly(int square, U64 block);
 

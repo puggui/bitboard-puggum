@@ -99,7 +99,7 @@ U64 mask_bishop_attacks(int square) {
 }
 
 // mask rook attacks
-U64 mask_rook_attack(int square) {
+U64 mask_rook_attacks(int square) {
   // return attack bitboard
   U64 attacks = 0ULL;
 
