@@ -12,12 +12,13 @@ int main() {
   set_bit(&block, g4);
   print_bitboard(block);
 
-  printf("bit count: %d\n", count_bits(block));
   // init leaper pieces attacks
   init_leapers_attacks(); 
-
-  U64 bitboard = mask_king_attacks(g4);
-  print_bitboard(bitboard);
+  
+  // test print LS1B
+  int index =  get_ls1b_index(block);
+  printf("index: %d\n", index);
+  printf("coordinate: %s\n", square_to_coordinates[index]);
 
   return 0;
 }

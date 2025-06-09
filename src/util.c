@@ -19,6 +19,18 @@ int count_bits(U64 bitboard) {
   return count;
 }
 
+// get least significant 1st bit index
+int get_ls1b_index(U64 bitboard) {
+  // make sure bitboard is not 0
+  if (bitboard) {
+    // count trailing bits before LS1B
+    return count_bits((bitboard & -bitboard) - 1);
+  } else {
+    // else return illegal index
+    return -1;
+  }
+}
+
 void print_bitboard(U64 bitboard) {
   printf("\n");
   // loop over board rank
