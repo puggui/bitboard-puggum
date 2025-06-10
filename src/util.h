@@ -19,6 +19,12 @@ void pop_bit(U64* bitboard, int square);
 extern uint32_t state;
 
 // pseudo random number state
-uint32_t get_random_number();
+uint32_t get_random_u32_number();
+
+// generate 64 bit psuedo legal numbers
+U64 get_random_u64_number();
+
+// generate magic number candidate
+U64 generate_magic_number();
 
 #endif
