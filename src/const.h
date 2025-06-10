@@ -32,4 +32,9 @@ extern const int bishop_relevant_bits[64];
 // relevant occupancy bit count for every square on board for rook
 extern const int rook_relevant_bits[64];
 
+enum { rook, bishop };
+
+extern const U64 rook_magic_numbers[64];
+extern const U64 bishop_magic_numbers[64];
+
 #endif
