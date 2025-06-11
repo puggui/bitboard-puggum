@@ -138,7 +138,7 @@ U64 find_magic_number(int square, int relevant_bits, int bishop) {
     // skip unsuitable magic numbers
     if (count_bits((attack_mask * magic_number) & 0xff00000000000000) < 6) continue;
 
-    // init used attack array
+    // used to test for collision, set entire array to 0 every time a new square is computed 
     memset(used_attacks, 0ULL, sizeof(used_attacks));
 
     // init index & fail flag
@@ -187,4 +187,6 @@ void init_magic_number() {
 void init_all() {
   init_leapers_attacks();
   // init_magic_number();
+  init_slider_attack(bishop);
+  init_slider_attack(rook);
 }
