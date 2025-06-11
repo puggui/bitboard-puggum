@@ -56,15 +56,15 @@ void print_bitboard(U64 bitboard) {
 }
 
 U64 get_bit(U64 bitboard, int square) {
- return bitboard & (1ULL << square);
+ return (bitboard) & (1ULL << (square));
 }
 
 void set_bit(U64* bitboard, int square) {
-  *bitboard |= (1ULL << square);
+  (*bitboard) |= (1ULL << (square));
 }
 
 void pop_bit(U64* bitboard, int square) {
-  get_bit(*bitboard, square) ? *bitboard ^= (1ULL << square) : 0;
+  get_bit(*bitboard, square) ? (*bitboard) ^= (1ULL << (square)) : 0;
 }
 
 uint32_t random_state = 1804289383;
@@ -190,3 +190,9 @@ void init_all() {
   init_slider_attack(bishop);
   init_slider_attack(rook);
 }
+
+U64 bitboards[6];
+U64 occupancies[2];
+int side = -1;
+int enpassent = no_sq;
+int castle;

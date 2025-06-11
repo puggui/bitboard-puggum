@@ -35,4 +35,19 @@ void init_magic_number();
 
 void init_all();
 
+// piece bitboard
+extern U64 bitboards[6];
+
+// occupancy bitboard
+extern U64 occupancies[2];
+
+// slide to move
+extern int side;
+
+/// en passent square
+extern int enpassent;
+
+// castling rights
+extern int castle;
+
 #endif

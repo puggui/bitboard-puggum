@@ -13,7 +13,7 @@ enum {
   a4, b4, c4, d4, e4, f4, g4, h4,
   a3, b3, c3, d3, e3, f3, g3, h3,
   a2, b2, c2, d2, e2, f2, g2, h2,
-  a1, b1, c1, d1, e1, f1, g1, h1
+  a1, b1, c1, d1, e1, f1, g1, h1, no_sq
 };
 
 extern const char* square_to_coordinates[64];
@@ -36,5 +36,35 @@ enum { rook, bishop };
 
 extern const U64 rook_magic_numbers[64];
 extern const U64 bishop_magic_numbers[64];
+
+// castling rights binary encoding
+
+/*
+
+    bin  dec
+    
+   0001    1  white king can castle to the king side
+   0010    2  white king can castle to the queen side
+   0100    4  black king can castle to the king side
+   1000    8  black king can castle to the queen side
+
+   examples
+
+   1111       both sides an castle both directions
+   1001       black king => queen side
+              white king => king side
+
+*/
+
+enum { wk = 1, wq = 2, bk = 4, bq = 8 };
+
+// encode pieces (capital letters = white, lowercase letters = black)
+enum { P, N, B, R, Q, K, p, n, b, r, q, k};
+
+// ASCII pieces
+extern char ascii_pieces[12];
+
+// convert ASCII character pieces to encode constants
+extern int char_pieces[];
 
 #endif
