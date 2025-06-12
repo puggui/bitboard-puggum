@@ -193,6 +193,48 @@ void init_all() {
 
 U64 bitboards[6];
 U64 occupancies[2];
-int side = -1;
+int side;
 int enpassent = no_sq;
 int castle;
+
+void print_board() {
+  printf("\n");
+  for (int rank = 0; rank < 8; ++rank) {
+    for (int file = 0; file < 8; ++file) {
+      // init square 
+      int square = rank * 8 + file;
+      
+      // print ranks
+      if (!file) {
+        printf("%d  ", 8 - rank);
+      }
+      // define piece variable 
+      int piece = -1;
+
+      // loop over all piece bitboard
+      for (int bb_piece = P; bb_piece <=K; ++bb_piece) {
+        if (get_bit(bitboards[bb_piece] & occupancies[white], square)) {
+          piece = bb_piece;
+        } 
+        if (get_bit(bitboards[bb_piece] & occupancies[black], square)) {
+          piece = bb_piece + 6;
+        } 
+      }
+      
+      // 
+      printf("%c ", piece == -1 ? '.' : ascii_pieces[piece]);
+    }
+    printf("\n");
+  }
+  // print files
+  printf("\n   a b c d e f g h\n\n");
+
+  // print side to move
+  printf("   side:    %s\n\n", side ? "black" : "white");
+
+  // print en passant square
+  printf("   en passant: %s\n\n", (enpassent != no_sq) ? square_to_coordinates[enpassent] : "no");
+
+  // print castling rights
+  printf("   castling: %c%c%c%c\n\n", (castle & wk) ? 'K' : '-', (castle & wq) ? 'Q' : '-', (castle & bk) ? 'k' : '-', (castle & bq) ? 'q' : '-');
+}

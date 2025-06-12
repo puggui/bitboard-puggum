@@ -50,4 +50,6 @@ extern int enpassent;
 // castling rights
 extern int castle;
 
+void print_board();
+
 #endif
