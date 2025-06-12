@@ -52,4 +52,8 @@ extern int castle;
 
 void print_board();
 
+void add_piece(int piece, int index);
+
+void parse_fen(char* fen);
+
 #endif

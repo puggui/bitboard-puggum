@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+
 #include "util.h"
 #include "attacks.h"
 #include "const.h"
@@ -237,4 +240,106 @@ void print_board() {
 
   // print castling rights
   printf("   castling: %c%c%c%c\n\n", (castle & wk) ? 'K' : '-', (castle & wq) ? 'Q' : '-', (castle & bk) ? 'k' : '-', (castle & bq) ? 'q' : '-');
+}
+
+void add_piece(int piece, int index) {
+  // calculate value on bitboard
+  U64 square = 1ULL << index;
+
+  // if piece is white value 0-5
+  if (piece >= 0 && piece <= 5) {
+    bitboards[piece] |= square;
+    occupancies[white] |= square;
+  } 
+  // if black piece value 6-11 
+  else if (piece >= 6 && piece <= 11) {
+    bitboards[piece - 6] |= square;
+    occupancies[black] |= square;
+  } 
+}
+
+void parse_fen(char* fen) {
+  // reset board position and occupancies (bitboards) 
+  memset(bitboards, 0ULL, sizeof(bitboards));
+  memset(occupancies, 0ULL, sizeof(occupancies));
+
+  // reset game state variable
+  side = 0;
+  castle = 0;
+  enpassent = no_sq;
+
+  // init FEN string copy 89 + 1 for '\0' is the longest possible FEN string
+  char fen_copy[90]; 
+  
+  // copy FEN string to not modify original
+  strcpy(fen_copy, fen);
+
+  // tokenize FEN string to array <piece placement> <side to move> <castling rights> <en passent> <halfmove> <fullmove>
+  char* token[6]; 
+
+  // index to count FEN's 6 field
+  int i = 0;
+
+  char* part = strtok(fen_copy, " ");
+  while (part != NULL && i < 6) {
+    token[i] = part;
+    part = strtok(NULL, " ");
+    i++;
+  }
+
+  // piece placement field
+  char* ptr = token[0];
+  // init index to count the 64 tiles
+  int index = 0;
+  // parse <piece placement>
+  while (index < 64) {
+    if (isalpha(*ptr) && index < 64) {
+      // init piece type
+      int piece = char_pieces[*ptr];
+      
+      // set piece on correspondig bitboard
+      add_piece(piece, index);
+
+      // increment count 64
+      index++;
+    }
+    
+    // match empty square numbers within FEN string
+    else if (isdigit(*ptr) && index < 64) {
+      // intit offset (convert char 0 to int 0);
+      int offset = *ptr - '0';
+
+      // increment counter by number
+      index += offset;
+    }
+
+    ptr++;
+  }
+
+  // parse <side to move>
+  if (strcmp(token[1], "w") == 0) {
+    side = white;
+  } else if (strcmp(token[1], "b") == 0) {
+    side = black;
+  }
+
+  // parse <castling right>
+  for (int i = 0; token[2][i] != '\0'; i++) {
+    switch (token[2][i]) {
+      case 'K': castle |= 0b0001; break;
+      case 'Q': castle |= 0b0010; break;
+      case 'k': castle |= 0b0100; break;
+      case 'q': castle |= 0b1000; break;
+    }
+  }
+
+  // parse <en passent square>
+  if (token[3][0] != '-') {
+    int file = token[3][0] - 'a';        // 'a'–'h' → 0–7
+    int rank = token[3][1] - '1';        // '1'–'8' → 0–7 (from bottom)
+    enpassent = (7 - rank) * 8 + file;   // convert to 0–63 index (top-down)
+  }
+
+  // halfmove = atoi(token[4]);
+  // fullmove = atoi(token[5]);
 }
