@@ -54,3 +54,38 @@ void print_attacked_squares(int side) {
   // print board files
   printf("\n   a b c d e f g h\n\n");
 }
+
+void generate_moves() {
+  // define source & target squares
+  int source_square, target_square;
+
+  // define current piece's bitboard copy & it's attacks
+  U64 bitboard, attacks;
+
+  // loop over all bitboards
+  for (int piece = P; piece <= k; ++piece) {
+    // init piece bitboard copy
+    bitboard = bitboards[piece];
+
+    // generate white pawns & white king castleing moves
+    if (side == white) {
+
+    }
+    // generate black pawns & white king castleing moves
+    else {
+
+    }
+
+    // generate kngiht moves
+
+    // generate bishop moves
+
+    // generate rook moves
+
+    // generate queen moves
+
+    // generate king moves
+
+  }
+  
+}
