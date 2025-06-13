@@ -209,7 +209,7 @@ void print_board() {
       
       // print ranks
       if (!file) {
-        printf("%d  ", 8 - rank);
+        printf("%d ", 8 - rank);
       }
       // define piece variable 
       int piece = -1;
@@ -225,7 +225,7 @@ void print_board() {
       }
       
       // 
-      printf("%c ", piece == -1 ? '.' : ascii_pieces[piece]);
+      printf(" %c", piece == -1 ? '.' : ascii_pieces[piece]);
     }
     printf("\n");
   }
