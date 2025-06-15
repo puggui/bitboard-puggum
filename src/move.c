@@ -451,3 +451,55 @@ void generate_moves() {
   }
   
 }
+
+/*
+        binary move bits                               hexidecimal constants
+  
+  0000 0000 0000 0000 0011 1111    source square       0x3f
+  0000 0000 0000 1111 1100 0000    target square       0xfc0
+  0000 0000 1111 0000 0000 0000    piece               0xf000
+  0000 1111 0000 0000 0000 0000    promoted piece      0xf0000
+  0001 0000 0000 0000 0000 0000    capture flag        0x100000
+  0010 0000 0000 0000 0000 0000    double push flag    0x200000
+  0100 0000 0000 0000 0000 0000    enpassant flag      0x400000
+  1000 0000 0000 0000 0000 0000    castling flag       0x800000
+*/
+
+int encode_move(int source, int target, int piece, int promoted, int capture, int doublepush, int enpassant, int castling) {
+  return (source) | ( target << 6) | (piece << 12) | (promoted << 16) | (capture << 20) | (doublepush << 21) | (enpassant << 22) | (castling << 23);
+}
+
+int get_move_source(int move) {
+  return (move & 0x3f);
+}
+
+int get_move_target(int move) {
+  return (move & 0xfc0) >> 6;
+}
+
+int get_move_piece(int move) {
+  return (move & 0xf000) >> 12;
+}
+
+int get_move_promoted(int move) {
+  return (move & 0xf0000) >> 16;
+}
+
+// we dont >> 20 for performance
+int get_move_capture(int move) {
+  return (move & 0x100000);
+}
+
+int get_move_double(int move) {
+  return (move & 0x200000);
+}
+
+// extract enpassant flag
+int get_move_enpassant(int move) {
+  return (move & 0x400000);
+}
+
+// extract castling flag
+int get_move_castling(int move) {
+  return (move & 0x800000);
+}
