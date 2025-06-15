@@ -148,6 +148,37 @@ void generate_moves() {
           pop_bit(&bitboard, source_square);
         }
       }
+      // castleing moves
+      if (piece == K) {
+        // king side castling is available
+        if (castle & wk) {
+          // make sure squares between king and king side rook are empty
+          if (!get_bit(occupancies[white] | occupancies[black], f1) && 
+              !get_bit(occupancies[white] | occupancies[black], g1)) {
+            // make sure king and the f1 squares are not under attack
+            // don't need to check king's target square (g1) since we will have to check if the king moves into check at the end anyways
+            if (!is_square_attacked(e1, black) && 
+                !is_square_attacked(f1, black)) {
+              printf("castleing move: e1g1\n");
+            }
+          }
+        }
+
+        // queen side castling is available
+        if (castle & wq) {
+          // make sure squares between king and queen side rook are empty
+          if (!get_bit(occupancies[white] | occupancies[black], b1) && 
+              !get_bit(occupancies[white] | occupancies[black], c1) && 
+              !get_bit(occupancies[white] | occupancies[black], d1)) {
+            // make sure king and the c1, d1 squares are not under attack
+            // don't need to check king's target square (c1) since we will have to check if the king moves into check at the end anyways
+            if (!is_square_attacked(d1, black) &&
+                !is_square_attacked(e1, black)) {
+              printf("castling move: e1c1\n");
+            }
+          }
+        }
+      }
     }
     // generate black pawns & white king castleing moves
     else {
@@ -222,6 +253,38 @@ void generate_moves() {
           
           // pop ls1b from piece bitboard copy
           pop_bit(&bitboard, source_square);
+        }
+      }
+
+      // castling moves
+      if (piece == k) {
+        // king side castling is available
+        if (castle & bk) {
+          // make sure squares between king and king side rook are empty
+          if (!get_bit(occupancies[white] | occupancies[black], f8) && 
+              !get_bit(occupancies[white] | occupancies[black], g8)) {
+            // make sure king and the f8 squares are not under attack
+            // don't need to check king's target square (g8) since we will have to check if the king moves into check at the end anyways
+            if (!is_square_attacked(e8, white) && 
+                !is_square_attacked(f8, white)) {
+              printf("castling move: e8g8\n");
+            }
+          }
+        }
+
+        // queen side castling is available
+        if (castle & bq) {
+          // make sure squares between king and queen side rook are empty
+          if (!get_bit(occupancies[white] | occupancies[black], b8) && 
+              !get_bit(occupancies[white] | occupancies[black], c8) && 
+              !get_bit(occupancies[white] | occupancies[black], d8)) {
+            // make sure king and the c8, d8 squares are not under attack
+            // don't need to check king's target square (c8) since we will have to check if the king moves into check at the end anyways
+            if (!is_square_attacked(d8, white) &&
+                !is_square_attacked(e8, white)) {
+              printf("castleing move: e8c8\n");
+            }
+          }
         }
       }
     }

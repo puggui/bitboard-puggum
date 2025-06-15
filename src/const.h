@@ -56,7 +56,7 @@ extern const U64 bishop_magic_numbers[64];
 
 */
 
-enum { wk = 1, wq = 2, bk = 4, bq = 8 };
+enum { wk = 0b0001, wq = 0b0010, bk = 0b0100, bq = 0b1000 };
 
 // encode pieces (capital letters = white, lowercase letters = black)
 enum { P, N, B, R, Q, K, p, n, b, r, q, k};
