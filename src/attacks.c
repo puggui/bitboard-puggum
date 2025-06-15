@@ -3,8 +3,8 @@
 #include "util.h"
 
 U64 pawn_attacks[2][64];
-U64 knight_attack[64];
-U64 king_attack[64];
+U64 knight_attacks[64];
+U64 king_attacks[64];
 
 // generate pawn attacks
 U64 mask_pawn_attacks(int side, int square) {
@@ -195,10 +195,10 @@ void init_leapers_attacks() {
     pawn_attacks[black][square] = mask_pawn_attacks(black, square);
 
     // init knight attacks
-    knight_attack[square] = mask_knight_attacks(square);
+    knight_attacks[square] = mask_knight_attacks(square);
 
     // init king attacks
-    king_attack[square] = mask_king_attacks(square);
+    king_attacks[square] = mask_king_attacks(square);
   }
 }
 

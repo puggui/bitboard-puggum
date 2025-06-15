@@ -7,10 +7,10 @@
 extern U64 pawn_attacks[2][64];
 
 // knight attack table [square]
-extern U64 knight_attack[64];
+extern U64 knight_attacks[64];
 
 // king attack table [square]
-extern U64 king_attack[64];
+extern U64 king_attacks[64];
 
 // bishop attack masks
 extern U64 bishop_masks[64];
