@@ -35,4 +35,22 @@ int get_move_enpassant(int move);
 // extract castling flag
 int get_move_castling(int move);
 
+// move list structure
+typedef struct {
+  // moves
+  int moves[256];
+
+  // move count
+  int count;
+} moves;
+
+// print move (for UCI purposes)
+void print_move(int move);
+
+// print move list (for debugging purposes)
+void print_move_list(moves* move_list);
+
+// add move to the move list
+void add_move(moves* move_list, int move);
+
 #endif

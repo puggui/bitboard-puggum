@@ -1,6 +1,7 @@
 #ifndef CONST_H
 #define CONST_H
 
+#include "move.h"
 #include <stdint.h>
 #define U64 uint64_t
 
@@ -66,5 +67,7 @@ extern char ascii_pieces[12];
 
 // convert ASCII character pieces to encode constants
 extern int char_pieces[];
+
+extern char promoted_pieces[];
 
 #endif

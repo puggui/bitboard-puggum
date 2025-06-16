@@ -188,3 +188,14 @@ int char_pieces[] = {
   ['q'] = q,
   ['k'] = k
 };
+
+char promoted_pieces[] = {
+  [Q] = 'q',
+  [R] = 'r',
+  [B] = 'b',
+  [N] = 'n',
+  [q] = 'q',
+  [r] = 'r',
+  [b] = 'b',
+  [n] = 'n'
+};
