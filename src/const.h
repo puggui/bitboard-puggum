@@ -70,4 +70,18 @@ extern int char_pieces[];
 
 extern char promoted_pieces[];
 
+// preserve board state
+#define copy_board()                                                      \
+    U64 bitboards_copy[6], occupancies_copy[2];                           \
+    int side_copy, enpassant_copy, castle_copy;                           \
+    memcpy(bitboards_copy, bitboards, 48);                                \
+    memcpy(occupancies_copy, occupancies, 16);                            \
+    side_copy = side, enpassant_copy = enpassant, castle_copy = castle;   \
+
+// restore board state
+#define take_back()                                                       \
+    memcpy(bitboards, bitboards_copy, 48);                                \
+    memcpy(occupancies, occupancies_copy, 16);                            \
+    side = side_copy, enpassant = enpassant_copy, castle = castle_copy;   \
+
 #endif
