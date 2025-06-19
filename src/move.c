@@ -130,14 +130,14 @@ void generate_moves(moves* move_list) {
               add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
             }
             // generate en passant captures
-            if (enpassent != no_sq) {
+            if (enpassant != no_sq) {
               // look up pawn attacks and bitwise AND with en passent square (bit) 
-              U64 enpassent_attacks = pawn_attacks[side][source_square] & (1ULL << enpassent);
+              U64 enpassant_attacks = pawn_attacks[side][source_square] & (1ULL << enpassant);
 
               // make sure en passent capture available
-              if (enpassent_attacks) {
+              if (enpassant_attacks) {
                 // init enpassant capture target square
-                int target_enpassant = get_ls1b_index(enpassent_attacks);
+                int target_enpassant = get_ls1b_index(enpassant_attacks);
                 add_move(move_list, encode_move(source_square, target_enpassant, piece, 0, 1, 0, 1, 0));
               }
             }
@@ -237,14 +237,14 @@ void generate_moves(moves* move_list) {
               add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
             }
             // generate en passant captures
-            if (enpassent != no_sq) {
+            if (enpassant != no_sq) {
               // look up pawn attacks and bitwise AND with en passent square (bit) 
-              U64 enpassent_attacks = pawn_attacks[side][source_square] & (1ULL << enpassent);
+              U64 enpassant_attacks = pawn_attacks[side][source_square] & (1ULL << enpassant);
 
               // make sure en passent capture available
-              if (enpassent_attacks) {
+              if (enpassant_attacks) {
                 // init enpassant capture target square
-                int target_enpassant = get_ls1b_index(enpassent_attacks);
+                int target_enpassant = get_ls1b_index(enpassant_attacks);
               add_move(move_list, encode_move(source_square, target_enpassant, piece, 0, 1, 0, 1, 0));
               }
             }

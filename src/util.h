@@ -45,7 +45,7 @@ extern U64 occupancies[2];
 extern int side;
 
 /// en passent square
-extern int enpassent;
+extern int enpassant;
 
 // castling rights
 extern int castle;

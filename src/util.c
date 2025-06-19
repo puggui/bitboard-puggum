@@ -197,7 +197,7 @@ void init_all() {
 U64 bitboards[6];
 U64 occupancies[2];
 int side;
-int enpassent = no_sq;
+int enpassant = no_sq;
 int castle;
 
 void print_board() {
@@ -236,7 +236,7 @@ void print_board() {
   printf("   side:    %s\n\n", side ? "black" : "white");
 
   // print en passant square
-  printf("   en passant: %s\n\n", (enpassent != no_sq) ? square_to_coordinates[enpassent] : "no");
+  printf("   en passant: %s\n\n", (enpassant != no_sq) ? square_to_coordinates[enpassant] : "no");
 
   // print castling rights
   printf("   castling: %c%c%c%c\n\n", (castle & wk) ? 'K' : '-', (castle & wq) ? 'Q' : '-', (castle & bk) ? 'k' : '-', (castle & bq) ? 'q' : '-');
@@ -266,7 +266,7 @@ void parse_fen(char* fen) {
   // reset game state variable
   side = 0;
   castle = 0;
-  enpassent = no_sq;
+  enpassant = no_sq;
 
   // init FEN string copy 89 + 1 for '\0' is the longest possible FEN string
   char fen_copy[90]; 
@@ -337,7 +337,7 @@ void parse_fen(char* fen) {
   if (token[3][0] != '-') {
     int file = token[3][0] - 'a';        // 'a'–'h' → 0–7
     int rank = token[3][1] - '1';        // '1'–'8' → 0–7 (from bottom)
-    enpassent = (7 - rank) * 8 + file;   // convert to 0–63 index (top-down)
+    enpassant = (7 - rank) * 8 + file;   // convert to 0–63 index (top-down)
   }
 
   // halfmove = atoi(token[4]);
