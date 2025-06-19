@@ -6,8 +6,17 @@ int is_square_attacked(int square, int side);
 
 void print_attacked_squares(int side);
 
+// move list structure
+typedef struct {
+  // moves
+  int moves[256];
+
+  // move count
+  int count;
+} moves;
+
 // generate all moves
-void generate_moves();
+void generate_moves(moves* move_list);
 
 int encode_move(int source, int target, int piece, int promoted, int capture, int doublepush, int enpassant, int castling);
 
@@ -34,15 +43,6 @@ int get_move_enpassant(int move);
 
 // extract castling flag
 int get_move_castling(int move);
-
-// move list structure
-typedef struct {
-  // moves
-  int moves[256];
-
-  // move count
-  int count;
-} moves;
 
 // print move (for UCI purposes)
 void print_move(int move);
