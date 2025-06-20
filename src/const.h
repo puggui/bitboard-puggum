@@ -84,4 +84,6 @@ extern char promoted_pieces[];
     memcpy(occupancies, occupancies_copy, 16);                            \
     side = side_copy, enpassant = enpassant_copy, castle = castle_copy;   \
 
+enum { all_moves, only_captures };
+
 #endif

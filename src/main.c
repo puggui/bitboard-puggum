@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "const.h"
-// #include "move.h"
+#include "move.h"
 #include "util.h"
 
 #define tricky_position "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1 "
@@ -13,17 +13,30 @@ int main() {
   parse_fen(tricky_position);
   print_board();
   
-  // preserve board state
-  copy_board();
+  // create move list instance
+  moves move_list[1];
 
-  // parse fen
-  parse_fen(empty_board);
-  print_board();
+  // generate moves
+  generate_moves(move_list);
 
-  // restore board state
-  take_back();
+  // loop over generated moves
+  for (int move_count = 0; move_count < move_list->count; ++move_count) {
+    // init move
+    int move = move_list->moves[move_count];
 
-  print_board();
+    // preserve board state
+    copy_board();
+
+    // make move
+    make_move(move, all_moves);
+    print_board();
+    getchar();
+
+    // take back
+    take_back();
+    print_board();
+    getchar();
+  }
 
   return 0;
 }

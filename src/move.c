@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include <string.h>
 #include "move.h"
 #include "attacks.h"
 #include "const.h"
@@ -547,4 +547,40 @@ void add_move(moves* move_list, int move) {
 
   // increment move count
   move_list->count++;
+}
+
+int make_move(int move, int move_flag) {
+  // quiet moves
+  if (move_flag == all_moves) {
+    // preserve board state
+    copy_board();
+    
+    // parse move
+    int source_square = get_move_source(move);
+    int target_square = get_move_target(move);
+    int piece = get_move_piece(move);
+    int promoted = get_move_promoted(move);
+    int capture = get_move_capture(move);
+    int doublepush = get_move_double(move);
+    int enpass = get_move_capture(move);
+    int castling = get_move_castling(move);
+
+    // move piece
+    pop_bit(&bitboards[piece], source_square);
+    set_bit(&bitboards[piece], target_square);
+
+  }
+  // capture moves
+  else {
+    // make sure move is a capture
+    if (get_move_capture(move)) {
+      make_move(move, all_moves);
+    }
+    // otherwise the move is not a capture
+    else {
+      // dont make the move
+      return 0;
+    }
+  }
+  return 0;
 }

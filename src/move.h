@@ -53,4 +53,7 @@ void print_move_list(moves* move_list);
 // add move to the move list
 void add_move(moves* move_list, int move);
 
+// make move on chess board
+int make_move(int move, int move_flag);
+
 #endif
