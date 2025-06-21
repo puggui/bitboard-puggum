@@ -604,6 +604,7 @@ int make_move(int move, int move_flag) {
     if (enpass) {
       // erase pawn depending on side to move
       (color == white) ? pop_bit(&bitboards[P], target_square + 8) : pop_bit(&bitboards[P], target_square - 8);
+      (color == white) ? pop_bit(&occupancies[white], target_square + 8) : pop_bit(&occupancies[black], target_square - 8);
     }
 
     // reset en passant square
@@ -613,6 +614,44 @@ int make_move(int move, int move_flag) {
     if (doublepush) {
       // set enpassant square depending on side to move
       (color == white) ? (enpassant = target_square + 8) : (enpassant = target_square - 8);
+    }
+
+    // handle castling moves
+    if (castling) {
+      switch (target_square) {
+        // white castles king side
+        case (g1):
+          // move H rook
+          pop_bit(&bitboards[R], h1);
+          pop_bit(&occupancies[white], h1);
+          set_bit(&bitboards[R], f1);
+          set_bit(&occupancies[white], f1);
+          break;
+        // white castles queen side
+        case (c1):
+          // move A rook
+          pop_bit(&bitboards[R], a1);
+          pop_bit(&occupancies[white], a1);
+          set_bit(&bitboards[R], d1);
+          set_bit(&occupancies[white], d1);
+          break;
+        // black casltes king side
+        case (g8):
+          // move H rook
+          pop_bit(&bitboards[R], h8);
+          pop_bit(&occupancies[black], h8);
+          set_bit(&bitboards[R], f8);
+          set_bit(&occupancies[black], f8);
+          break;
+        // black castles queen side
+        case (c8):
+          // move A rook
+          pop_bit(&bitboards[R], a8);
+          pop_bit(&occupancies[black], a8);
+          set_bit(&bitboards[R], d8);
+          set_bit(&occupancies[black], d8);
+          break;
+      }
     }
   }
   // capture moves
