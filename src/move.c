@@ -599,6 +599,15 @@ int make_move(int move, int move_flag) {
       (color == white) ? set_bit(&bitboards[promoted_piece], target_square) : set_bit(&bitboards[promoted_piece - 6], target_square);
       set_bit(&occupancies[color], target_square);
     }
+
+    // handle enpassant capture
+    if (enpass) {
+      // erase pawn depending on side to move
+      (color == white) ? pop_bit(&bitboards[P], target_square + 8) : pop_bit(&bitboards[P], target_square - 8);
+    }
+
+    // reset en passant square
+    enpassant = no_sq;
   }
   // capture moves
   else {

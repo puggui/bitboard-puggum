@@ -4,13 +4,14 @@
 #include "move.h"
 #include "util.h"
 
-#define tricky_position "r3k2r/pPppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPpP/R3K2R b KQkq - 0 1 "
+#define white_enpassant_test "r3k2r/p11pqpb1/bn2pnp1/2pPN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq c6 0 1 "
+#define black_enpassant_test "r3k2r/p11pqpb1/bn2pnp1/2pPN3/Pp2P3/2N2Q1p/1PPBBPPP/R3K2R b KQkq a3 0 1 "
 #define empty_board "8/8/8/8/8/8/8/8 b - - "
 
 int main() {
   init_all();
 
-  parse_fen(tricky_position);
+  parse_fen(black_enpassant_test);
   print_board();
   
   // create move list instance
@@ -31,7 +32,6 @@ int main() {
     make_move(move, all_moves);
     printf("make move\n");
     print_board();
-    // print_bitboard(bitboards[get_move_promoted(move)]);
     getchar();
 
     // take back
