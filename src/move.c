@@ -565,10 +565,30 @@ int make_move(int move, int move_flag) {
     int enpass = get_move_capture(move);
     int castling = get_move_castling(move);
 
-    // move piece
-    pop_bit(&bitboards[piece], source_square);
-    set_bit(&bitboards[piece], target_square);
+    // if piece value is less than 6 (black pawn) make color white else black
+    int color = (piece < p) ? white : black;
 
+    // remove piece from source square 
+    (color == white) ? pop_bit(&bitboards[piece], source_square) : pop_bit(&bitboards[piece - 6], source_square);
+    pop_bit(&occupancies[color], source_square);
+    
+
+    // handling capture moves
+    if (capture) {
+      // loop over bitboards opposite to the current side to move
+      for (int bb_piece = P; bb_piece <= K; ++bb_piece) {
+        // if there is a piece on the target square
+        if (get_bit(bitboards[bb_piece], target_square) && get_bit(occupancies[!color], target_square)) {
+          // remove it from correspondign bitboard
+          pop_bit(&bitboards[bb_piece], target_square);
+          pop_bit(&occupancies[!color], target_square);
+          break;
+        }
+      }
+    }
+    
+    // add piece at the end to not conflict with capture move
+    add_piece(piece, target_square);
   }
   // capture moves
   else {

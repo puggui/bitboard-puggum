@@ -4,7 +4,7 @@
 #include "move.h"
 #include "util.h"
 
-#define tricky_position "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1 "
+#define tricky_position "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQkq - 0 1 "
 #define empty_board "8/8/8/8/8/8/8/8 b - - "
 
 int main() {
@@ -29,11 +29,14 @@ int main() {
 
     // make move
     make_move(move, all_moves);
+    printf("make move\n");
     print_board();
+    // print_bitboard(bitboards[get_move_promoted(move)]);
     getchar();
 
     // take back
     take_back();
+    printf("take back\n");
     print_board();
     getchar();
   }
