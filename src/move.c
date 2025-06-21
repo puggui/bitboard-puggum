@@ -608,6 +608,12 @@ int make_move(int move, int move_flag) {
 
     // reset en passant square
     enpassant = no_sq;
+
+    // handle double pawn push
+    if (doublepush) {
+      // set enpassant square depending on side to move
+      (color == white) ? (enpassant = target_square + 8) : (enpassant = target_square - 8);
+    }
   }
   // capture moves
   else {
