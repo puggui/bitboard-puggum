@@ -559,7 +559,7 @@ int make_move(int move, int move_flag) {
     int source_square = get_move_source(move);
     int target_square = get_move_target(move);
     int piece = get_move_piece(move);
-    int promoted = get_move_promoted(move);
+    int promoted_piece = get_move_promoted(move);
     int capture = get_move_capture(move);
     int doublepush = get_move_double(move);
     int enpass = get_move_capture(move);
@@ -589,6 +589,16 @@ int make_move(int move, int move_flag) {
     
     // add piece at the end to not conflict with capture move
     add_piece(piece, target_square);
+
+    // handle pawn promotions
+    if (promoted_piece) {
+      // erase pawn from target square
+      (color == white) ? pop_bit(&bitboards[piece], target_square) : pop_bit(&bitboards[piece - 6], target_square);
+      pop_bit(&occupancies[color], target_square);
+      // set up promoted piece on chess board
+      (color == white) ? set_bit(&bitboards[promoted_piece], target_square) : set_bit(&bitboards[promoted_piece - 6], target_square);
+      set_bit(&occupancies[color], target_square);
+    }
   }
   // capture moves
   else {
