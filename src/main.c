@@ -31,7 +31,7 @@ int main() {
 
     // make move
     make_move(move, all_moves);
-    printf("make move\n");
+    printf("make move index: %d\n", move_count);
     print_board();
     getchar();
 

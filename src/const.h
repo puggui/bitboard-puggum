@@ -86,4 +86,7 @@ extern char promoted_pieces[];
 
 enum { all_moves, only_captures };
 
+// castling rights update constants
+extern const int castling_rights[64];
+
 #endif

@@ -562,7 +562,7 @@ int make_move(int move, int move_flag) {
     int promoted_piece = get_move_promoted(move);
     int capture = get_move_capture(move);
     int doublepush = get_move_double(move);
-    int enpass = get_move_capture(move);
+    int enpass = get_move_enpassant(move);
     int castling = get_move_castling(move);
 
     // if piece value is less than 6 (black pawn) make color white else black
@@ -587,8 +587,11 @@ int make_move(int move, int move_flag) {
       }
     }
     
-    // add piece at the end to not conflict with capture move
-    add_piece(piece, target_square);
+    // check if promote piece to not result in double work
+    if (!promoted_piece) {
+      // add piece at the end to not conflict with capture move
+      add_piece(piece, target_square);
+    }
 
     // handle pawn promotions
     if (promoted_piece) {
@@ -653,6 +656,10 @@ int make_move(int move, int move_flag) {
           break;
       }
     }
+
+    // update castling rights
+    castle &= castling_rights[source_square]; 
+    castle &= castling_rights[target_square]; 
   }
   // capture moves
   else {
@@ -666,5 +673,5 @@ int make_move(int move, int move_flag) {
       return 0;
     }
   }
-  return 0;
+  return 1;
 }
