@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <sys/time.h>
 
 #include "util.h"
 #include "attacks.h"
@@ -342,4 +343,11 @@ void parse_fen(char* fen) {
 
   // halfmove = atoi(token[4]);
   // fullmove = atoi(token[5]);
+}
+
+int get_time_ms() {
+  struct timeval time_value;
+  gettimeofday(&time_value, NULL);
+  // time in seconds * 1000 + time in microseconds / 1000
+  return time_value.tv_sec * 1000 + time_value.tv_usec / 1000;
 }

@@ -56,4 +56,7 @@ void add_piece(int piece, int index);
 
 void parse_fen(char* fen);
 
+// get time in milliseconds
+int get_time_ms();
+
 #endif
