@@ -6,7 +6,7 @@
 
 #define white_enpassant_test "r3k2r/p11pqpb1/bn2pnp1/2pPN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq c6 0 1 "
 #define black_enpassant_test "r3k2r/p11pqpb1/bn2pnp1/2pPN3/Pp2P3/2N2Q1p/1PPBBPPP/R3K2R b KQkq a3 0 1 "
-#define tricky_position "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQkq - 0 1 "
+#define tricky_position "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1 "
 #define empty_board "8/8/8/8/8/8/8/8 b - - "
 
 int main() {
@@ -30,8 +30,10 @@ int main() {
     copy_board();
 
     // make move
-    make_move(move, all_moves);
-    printf("make move index: %d\n", move_count);
+    if (!make_move(move, all_moves)) {
+      continue; 
+    } 
+    printf("make move\n");
     print_board();
     getchar();
 

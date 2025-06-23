@@ -27,7 +27,7 @@ int is_square_attacked(int square, int side) {
   // attacked by rook 
   if (get_rook_attacks(square,occupied) & ((side == white) ? (bitboards[R] & occupancies[white]) : (bitboards[R] & occupancies[black]))) return 1;
 
-  // attacked by king 
+  // attacked by queen 
   if (get_queen_attacks(square, occupied) & ((side == white) ? (bitboards[Q] & occupancies[white]) : (bitboards[Q] & occupancies[black]))) return 1;
 
   return 0;
@@ -660,6 +660,23 @@ int make_move(int move, int move_flag) {
     // update castling rights
     castle &= castling_rights[source_square]; 
     castle &= castling_rights[target_square]; 
+
+    // change side
+    side = !side;
+
+    // make sure that king has not been exposed into a check
+    int white_king_square = get_ls1b_index(bitboards[K] & occupancies[white]);
+    int black_king_square = get_ls1b_index(bitboards[K] & occupancies[black]);
+    if (is_square_attacked((side == white) ? black_king_square : white_king_square, side)) {
+      // move is illegal, so take it back
+      take_back();
+
+      // return illegal move
+      return 0;
+    } else {
+      // return legal move
+      return 1;
+    }
   }
   // capture moves
   else {
