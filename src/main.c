@@ -10,21 +10,14 @@
 #define tricky_position "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1 "
 #define king_in_check_test "r3k2r/p1ppqpb1/1n2pnp1/3PN3/1p2P3/2N2Q1p/PPPBqPPP/R3K2R w KQkq - 0 1 "
 #define empty_board "8/8/8/8/8/8/8/8 b - - "
+#define start_position "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 int main() {
   init_all();
 
   parse_fen(tricky_position);
-  // print_board();
   
-  // start tracking time
-  int start_time = get_time_ms();
-
-  perft_driver(3);
-
-  // time taken to execute program
-  printf("time taken to execute: %d ms\n", get_time_ms() - start_time);
-  printf("nodes: %ld\n", nodes);
-
+  perft_test(5);
+  
   return 0;
 }

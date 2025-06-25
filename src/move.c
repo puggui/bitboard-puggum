@@ -129,21 +129,22 @@ void generate_moves(moves* move_list) {
               // one square ahead pawn move
               add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
             }
-            // generate en passant captures
-            if (enpassant != no_sq) {
-              // look up pawn attacks and bitwise AND with en passent square (bit) 
-              U64 enpassant_attacks = pawn_attacks[side][source_square] & (1ULL << enpassant);
-
-              // make sure en passent capture available
-              if (enpassant_attacks) {
-                // init enpassant capture target square
-                int target_enpassant = get_ls1b_index(enpassant_attacks);
-                add_move(move_list, encode_move(source_square, target_enpassant, piece, 0, 1, 0, 1, 0));
-              }
-            }
 
             // pop ls1b of the pawn attack
             pop_bit(&attacks, target_square);
+          }
+
+          // generate en passant captures
+          if (enpassant != no_sq) {
+            // look up pawn attacks and bitwise AND with en passent square (bit) 
+            U64 enpassant_attacks = pawn_attacks[side][source_square] & (1ULL << enpassant);
+
+            // make sure en passent capture available
+            if (enpassant_attacks) {
+              // init enpassant capture target square
+              int target_enpassant = get_ls1b_index(enpassant_attacks);
+              add_move(move_list, encode_move(source_square, target_enpassant, piece, 0, 1, 0, 1, 0));
+            }
           }
           
           // pop ls1b from piece bitboard copy
@@ -236,23 +237,23 @@ void generate_moves(moves* move_list) {
               // one square ahead pawn move
               add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
             }
-            // generate en passant captures
-            if (enpassant != no_sq) {
-              // look up pawn attacks and bitwise AND with en passent square (bit) 
-              U64 enpassant_attacks = pawn_attacks[side][source_square] & (1ULL << enpassant);
-
-              // make sure en passent capture available
-              if (enpassant_attacks) {
-                // init enpassant capture target square
-                int target_enpassant = get_ls1b_index(enpassant_attacks);
-              add_move(move_list, encode_move(source_square, target_enpassant, piece, 0, 1, 0, 1, 0));
-              }
-            }
 
             // pop ls1b of the pawn attack
             pop_bit(&attacks, target_square);
           }
           
+          // generate en passant captures
+          if (enpassant != no_sq) {
+            // look up pawn attacks and bitwise AND with en passent square (bit) 
+            U64 enpassant_attacks = pawn_attacks[side][source_square] & (1ULL << enpassant);
+
+            // make sure en passent capture available
+            if (enpassant_attacks) {
+              // init enpassant capture target square
+              int target_enpassant = get_ls1b_index(enpassant_attacks);
+              add_move(move_list, encode_move(source_square, target_enpassant, piece, 0, 1, 0, 1, 0));
+            }
+          }
           // pop ls1b from piece bitboard copy
           pop_bit(&bitboard, source_square);
         }
@@ -507,7 +508,11 @@ int get_move_castling(int move) {
 }
 
 void print_move(int move) {
-  printf("%s%s%c\n", square_to_coordinates[get_move_source(move)], square_to_coordinates[get_move_target(move)], promoted_pieces[get_move_promoted(move)]);
+  if (get_move_promoted(move)) {
+    printf("%s%s%c\n", square_to_coordinates[get_move_source(move)], square_to_coordinates[get_move_target(move)], promoted_pieces[get_move_promoted(move)]);
+  } else {
+    printf("%s%s\n", square_to_coordinates[get_move_source(move)], square_to_coordinates[get_move_target(move)]);
+  }
 }
 
 void print_move_list(moves* move_list) {
@@ -565,12 +570,9 @@ int make_move(int move, int move_flag) {
     int enpass = get_move_enpassant(move);
     int castling = get_move_castling(move);
 
-    // if piece value is less than 6 (black pawn) make color white else black
-    int color = (piece < p) ? white : black;
-
     // remove piece from source square 
-    (color == white) ? pop_bit(&bitboards[piece], source_square) : pop_bit(&bitboards[piece - 6], source_square);
-    pop_bit(&occupancies[color], source_square);
+    (side == white) ? pop_bit(&bitboards[piece], source_square) : pop_bit(&bitboards[piece - 6], source_square);
+    pop_bit(&occupancies[side], source_square);
     
 
     // handling capture moves
@@ -578,10 +580,10 @@ int make_move(int move, int move_flag) {
       // loop over bitboards opposite to the current side to move
       for (int bb_piece = P; bb_piece <= K; ++bb_piece) {
         // if there is a piece on the target square
-        if (get_bit(bitboards[bb_piece], target_square) && get_bit(occupancies[!color], target_square)) {
+        if (get_bit(bitboards[bb_piece], target_square) && get_bit(occupancies[!side], target_square)) {
           // remove it from correspondign bitboard
           pop_bit(&bitboards[bb_piece], target_square);
-          pop_bit(&occupancies[!color], target_square);
+          pop_bit(&occupancies[!side], target_square);
           break;
         }
       }
@@ -596,18 +598,18 @@ int make_move(int move, int move_flag) {
     // handle pawn promotions
     if (promoted_piece) {
       // erase pawn from target square
-      (color == white) ? pop_bit(&bitboards[piece], target_square) : pop_bit(&bitboards[piece - 6], target_square);
-      pop_bit(&occupancies[color], target_square);
+      (side == white) ? pop_bit(&bitboards[piece], target_square) : pop_bit(&bitboards[piece - 6], target_square);
+      pop_bit(&occupancies[side], target_square);
       // set up promoted piece on chess board
-      (color == white) ? set_bit(&bitboards[promoted_piece], target_square) : set_bit(&bitboards[promoted_piece - 6], target_square);
-      set_bit(&occupancies[color], target_square);
+      (side == white) ? set_bit(&bitboards[promoted_piece], target_square) : set_bit(&bitboards[promoted_piece - 6], target_square);
+      set_bit(&occupancies[side], target_square);
     }
 
     // handle enpassant capture
     if (enpass) {
       // erase pawn depending on side to move
-      (color == white) ? pop_bit(&bitboards[P], target_square + 8) : pop_bit(&bitboards[P], target_square - 8);
-      (color == white) ? pop_bit(&occupancies[white], target_square + 8) : pop_bit(&occupancies[black], target_square - 8);
+      (side == white) ? pop_bit(&bitboards[P], target_square + 8) : pop_bit(&bitboards[P], target_square - 8);
+      (side == white) ? pop_bit(&occupancies[black], target_square + 8) : pop_bit(&occupancies[white], target_square - 8);
     }
 
     // reset en passant square
@@ -616,7 +618,7 @@ int make_move(int move, int move_flag) {
     // handle double pawn push
     if (doublepush) {
       // set enpassant square depending on side to move
-      (color == white) ? (enpassant = target_square + 8) : (enpassant = target_square - 8);
+      (side == white) ? (enpassant = target_square + 8) : (enpassant = target_square - 8);
     }
 
     // handle castling moves
