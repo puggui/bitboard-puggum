@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "uci.h"
 #include "const.h"
@@ -9,7 +10,7 @@
 #define start_position "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 // parse user/GUI move string input (eg. "e7e8q")
-int parse_move(char *move_string) {
+int parse_move(char* move_string) {
   // create move list instance
   moves move_list[1];
 
@@ -47,7 +48,7 @@ int parse_move(char *move_string) {
   return 0;
 }
 
-void parse_position(char *command) {
+void parse_position(char* command) {
   // shift pointer to beginning of next token
   command += 9;
 
@@ -99,4 +100,25 @@ void parse_position(char *command) {
     }
     printf("%s\n", current_char);
   }
+}
+
+void parse_go(char* command) {
+  // init depth 
+  int depth = -1;
+
+  // init char pointer to current depth argument
+  char* current_depth = strstr(command, "depth");
+
+  // hadle fixed depth search
+  if (current_depth) {
+    // convert string to int and assign resulting value to depth
+    depth = atoi(current_depth + 6);
+  } else {
+    // different time control placeholder
+    depth = 6;
+  }
+
+  // search position
+  // search_position(depth);
+  printf("depth: %d\n", depth);
 }

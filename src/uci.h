@@ -5,6 +5,9 @@
 int parse_move(char* move_string);
 
 // parse UCI "position" command
-void parse_position(char *command);
+void parse_position(char* command);
+
+// parse UCI "go" command
+void parse_go(char* command);
 
 #endif
