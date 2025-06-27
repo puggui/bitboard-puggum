@@ -1,8 +1,12 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "uci.h"
 #include "const.h"
 #include "move.h"
+#include "util.h"
+
+#define start_position "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 // parse user/GUI move string input (eg. "e7e8q")
 int parse_move(char *move_string) {
@@ -41,4 +45,58 @@ int parse_move(char *move_string) {
   }
   // return illegal move
   return 0;
+}
+
+void parse_position(char *command) {
+  // shift pointer to beginning of next token
+  command += 9;
+
+  // init pointer to the current character in the command string
+  char *current_char = command;
+
+  // parse UCI "startpos" command
+  if (strncmp(command, "startpos", 8) == 0) {
+    // init chess board with start position
+    parse_fen(start_position);
+  } else { // parse UCI "fen" command
+    current_char = strstr(command, "fen");
+
+    // if no "fen" command is available within command string
+    if (current_char == NULL) {
+      parse_fen(start_position);
+    } else { // found "fen" substring
+      // shift pointer to the right where next token begins
+      current_char += 4;
+
+      // init chess board with posisiton from FEN string
+      parse_fen(current_char);
+    }
+  }
+  // parse moves after position
+  current_char = strstr(command, "moves");
+
+  // moves available
+  if (current_char != NULL) {
+    // shift pointer to the right where next token begins
+    current_char += 6;
+
+    // loop over moves within a move string
+    while (*current_char) {
+      // parse next move
+      int move = parse_move(current_char);
+
+      // if no more moves
+      if (move == 0) break;
+
+      // make move on the chess board
+      make_move(move, all_moves);
+
+      // move current character pointer to the end of current move
+      while(*current_char && *current_char != ' ') current_char++;
+
+      // go to next move
+      current_char++;
+    }
+    printf("%s\n", current_char);
+  }
 }
