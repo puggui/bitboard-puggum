@@ -16,7 +16,8 @@
 int main() {
   init_all();
 
-  parse_go("go depth 7");
+  // connect to the GUI
+  uci_loop();
   
   return 0;
 }

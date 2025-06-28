@@ -10,4 +10,7 @@ void parse_position(char* command);
 // parse UCI "go" command
 void parse_go(char* command);
 
+// main UCI loop
+void uci_loop();
+
 #endif

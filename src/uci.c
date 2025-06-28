@@ -6,6 +6,7 @@
 #include "const.h"
 #include "move.h"
 #include "util.h"
+#include "search.h"
 
 #define start_position "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
@@ -98,8 +99,9 @@ void parse_position(char* command) {
       // go to next move
       current_char++;
     }
-    printf("%s\n", current_char);
   }
+  // print board
+  print_board();
 }
 
 void parse_go(char* command) {
@@ -119,6 +121,70 @@ void parse_go(char* command) {
   }
 
   // search position
-  // search_position(depth);
-  printf("depth: %d\n", depth);
+  search_position(depth);
+}
+
+void uci_loop() {
+  // reset stdin & stdout buffers
+  setbuf(stdin, NULL);
+  setbuf(stdout, NULL);
+  
+  // define user / GUI input buffer
+  char input[2000];
+
+  // print engine info 
+  printf("id name pUgi\n");
+  printf("id name puggies\n");
+  printf("uciok\n");
+
+  // main loop
+  while (1) {
+    // reset user / GUI input
+    memset(input, 0, sizeof(input));
+
+    // make sure output reaches the GUI
+    fflush(stdout);
+
+    // get user / GUI input
+    if (!fgets(input, 2000, stdin)) continue;
+
+    // make sure input is available 
+    if (input[0] == '\n') continue;
+
+    // parse UCI "isready" command
+    if (strncmp(input, "isready", 7) == 0) {
+      printf("readyok\n");
+      continue;
+    }
+
+    // parse UCI "position" command
+    if (strncmp(input, "position", 8) == 0) {
+      // call parse position function
+      parse_position(input);
+    }
+
+    // parse UCI "ucinewgame" command
+    else if (strncmp(input, "ucinewgame", 10) == 0) {
+      // calll parse position function
+      parse_position("position startpos");
+    }
+
+    // parse UCI "go" command
+    else if (strncmp(input, "go", 2) == 0) {
+      parse_go(input);
+    }
+
+    // parse UCI "quit" command
+    else if (strncmp(input, "quit", 4) == 0) {
+      // quit chess engine program execution
+      break;
+    }
+
+    else if (strncmp(input, "uci", 3) == 0) {
+      // print engine info
+      printf("id name pUgi\n");
+      printf("id name puggies\n");
+      printf("uciok\n");
+    }
+  }
 }
