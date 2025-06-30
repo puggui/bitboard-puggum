@@ -89,4 +89,6 @@ enum { all_moves, only_captures };
 // castling rights update constants
 extern const int castling_rights[64];
 
+extern const int material_score[12];
+
 #endif

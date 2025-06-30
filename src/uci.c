@@ -101,7 +101,7 @@ void parse_position(char* command) {
     }
   }
   // print board
-  print_board();
+  // print_board();
 }
 
 void parse_go(char* command) {

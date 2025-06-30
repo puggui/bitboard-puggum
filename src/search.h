@@ -4,4 +4,7 @@
 // search position for the best move
 void search_position(int depth);
 
+// position evaluation
+int evaluate();
+
 #endif
